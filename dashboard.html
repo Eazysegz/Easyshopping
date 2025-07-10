@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard - Upload Product</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #000000, #1a1a1a);
+      color: #fff;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 32px;
+    }
+
+    .upload-section {
+      background: #222;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .upload-input input[type="file"] {
+      width: 100%;
+      background: #111;
+      padding: 10px;
+      border-radius: 10px;
+      color: #fff;
+      border: none;
+      margin-bottom: 20px;
+    }
+
+    #image-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .image-box {
+      background: #2a2a2a;
+      padding: 15px;
+      border-radius: 10px;
+      width: calc(50% - 10px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .image-box img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #444;
+    }
+
+    .image-box input,
+    .image-box textarea,
+    .image-box select {
+      margin-top: 10px;
+      padding: 10px;
+      font-size: 15px;
+      border-radius: 6px;
+      border: none;
+      background: #333;
+      color: #fff;
+    }
+
+    .delete-btn, .inner-desc-btn {
+      background-color: crimson;
+      color: #fff;
+      padding: 8px;
+      border: none;
+      border-radius: 6px;
+      margin-top: 10px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .inner-desc-btn {
+      background: #00bfff;
+    }
+
+    .inner-desc-popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 90%;
+      max-width: 500px;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      color: #000;
+      padding: 20px;
+      border-radius: 12px;
+      z-index: 999;
+      box-shadow: 0 0 30px rgba(0,0,0,0.7);
+    }
+
+    .inner-desc-popup textarea {
+      width: 100%;
+      height: 120px;
+      margin-top: 10px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .popup-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 15px;
+    }
+
+    .popup-actions button {
+      padding: 8px 14px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .popup-actions .save-btn {
+      background: #00bfff;
+      color: #fff;
+    }
+
+    .popup-actions .cancel-btn {
+      background: #aaa;
+      color: #000;
+    }
+
+    /* 🔐 Password Gate Style */
+    #passwordGate {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000000f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999999;
+      flex-direction: column;
+      color: white;
+    }
+
+    #passwordGate input {
+      padding: 12px 16px;
+      font-size: 18px;
+      border-radius: 8px;
+      border: none;
+      margin-top: 10px;
+      width: 80%;
+      max-width: 300px;
+    }
+
+    #passwordGate button {
+      padding: 10px 18px;
+      font-size: 16px;
+      background: #00bfff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    #passwordGate .error {
+      color: red;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- 🔐 Password Gate -->
+  <div id="passwordGate">
+    <h2>Enter Dashboard Password</h2>
+    <input type="password" id="passwordInput" placeholder="Enter password" />
+    <button onclick="checkPassword()">Access Dashboard</button>
+    <div class="error" id="errorMsg"></div>
+  </div>
+
+  <h1>📤 Upload Product</h1>
+  <div class="upload-section">
+    <input type="file" id="imageInput" accept="image/*" multiple>
+    <div id="image-container"></div>
+  </div>
+
+  <!-- Inner Description Popup -->
+  <div class="inner-desc-popup" id="popup">
+    <h3>Enter Inner Description</h3>
+    <textarea id="popup-desc-input" placeholder="Enter detailed product info..."></textarea>
+    <div class="popup-actions">
+      <button class="cancel-btn" onclick="closePopup()">Cancel</button>
+      <button class="save-btn" onclick="savePopup()">Save</button>
+    </div>
+  </div>
+
+  <script>
+    // 🔐 Password Logic
+    function checkPassword() {
+      const input = document.getElementById("passwordInput").value;
+      const error = document.getElementById("errorMsg");
+      if (input.trim().toLowerCase() === "eazysegz") {
+        document.getElementById("passwordGate").style.display = "none";
+      } else {
+        error.textContent = "❌ Incorrect password. Try again.";
+      }
+    }
+
+    // 🛒 Product Upload Logic
+    const imageInput = document.getElementById('imageInput');
+    const imageContainer = document.getElementById('image-container');
+    const popup = document.getElementById('popup');
+    const popupDescInput = document.getElementById('popup-desc-input');
+    let images = JSON.parse(localStorage.getItem('images')) || [];
+    let currentEditing = null;
+
+    imageInput.addEventListener('change', (e) => {
+      const files = e.target.files;
+      for (const file of files) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const newImage = {
+            src: reader.result,
+            description: '',
+            price: '',
+            category: '',
+            innerDescription: ''
+          };
+          images.push(newImage);
+          localStorage.setItem('images', JSON.stringify(images));
+          renderImages();
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function renderImages() {
+      imageContainer.innerHTML = '';
+      images.forEach((img, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'image-box';
+
+        const imageEl = document.createElement('img');
+        imageEl.src = img.src;
+
+        const descInput = document.createElement('textarea');
+        descInput.placeholder = 'Short description';
+        descInput.value = img.description;
+        descInput.oninput = () => {
+          images[index].description = descInput.value;
+          localStorage.setItem('images', JSON.stringify(images));
+        };
+
+        const priceInput = document.createElement('input');
+        priceInput.placeholder = 'Enter price';
+        priceInput.value = img.price;
+        priceInput.oninput = () => {
+          images[index].price = priceInput.value;
+          localStorage.setItem('images', JSON.stringify(images));
+        };
+
+        const categorySelect = document.createElement('select');
+        categorySelect.innerHTML = `
+          <option value="">Select Category</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Food">Food</option>
+          <option value="Beauty">Beauty</option>
+        `;
+        categorySelect.value = img.category;
+        categorySelect.onchange = () => {
+          images[index].category = categorySelect.value;
+          localStorage.setItem('images', JSON.stringify(images));
+        };
+
+        const innerBtn = document.createElement('button');
+        innerBtn.className = 'inner-desc-btn';
+        innerBtn.textContent = 'Inner Description';
+        innerBtn.onclick = () => {
+          currentEditing = index;
+          popupDescInput.value = images[index].innerDescription || '';
+          popup.style.display = 'block';
+        };
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.onclick = () => {
+          images.splice(index, 1);
+          localStorage.setItem('images', JSON.stringify(images));
+          renderImages();
+        };
+
+        wrapper.appendChild(imageEl);
+        wrapper.appendChild(descInput);
+        wrapper.appendChild(priceInput);
+        wrapper.appendChild(categorySelect);
+        wrapper.appendChild(innerBtn);
+        wrapper.appendChild(deleteBtn);
+        imageContainer.appendChild(wrapper);
+      });
+    }
+
+    function closePopup() {
+      popup.style.display = 'none';
+      popupDescInput.value = '';
+      currentEditing = null;
+    }
+
+    function savePopup() {
+      if (currentEditing !== null) {
+        images[currentEditing].innerDescription = popupDescInput.value;
+        localStorage.setItem('images', JSON.stringify(images));
+        closePopup();
+        renderImages();
+      }
+    }
+
+    renderImages();
+  </script>
+</body>
+</html>

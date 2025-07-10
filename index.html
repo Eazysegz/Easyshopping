@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping App</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    body { background: linear-gradient(to bottom, #e6b800, #fff2cc); color: #333; overflow-x: hidden; }
+     header {  
+      background: linear-gradient(to right, #cc9900, #ffdb4d);  
+      padding: 1rem;  
+      text-align: center;  
+      font-weight: bold;  
+      font-size: 1.5rem;  
+      color: white;  
+      position: sticky;  
+      top: 0;  
+      z-index: 999;  
+       
+   position: sticky;
+      font-weight: bold;
+      top: 0; left: 0; right: 0;
+      
+     padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 999999999;
+      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.05);
+      text-shadow: 0 0 8px #3db2ff;
+      font-size: 1.5rem;
+        background: linear-gradient(to right, #cc9900, #ffdb4d);
+    }
+  
+    nav button {
+      background: none;
+      border: none;
+      color: gold;
+      font-size: 1.0rem;
+    }
+    section {
+      display: none;
+      padding: 1rem;
+      min-height: 90vh;
+      animation: fadeIn 0.4s ease;
+    }
+    section.active {
+      display: block;
+    }
+   /* Fixed Header Styling */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: #000;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 999999999;
+      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.05);
+      text-shadow: 0 0 8px #3db2ff;
+    }
+
+    /* Logo Text */
+    header h1 {
+      font-size: 24px;
+      color: #ff9900;
+      margin-top:-20px;
+    }
+
+    /* Search Bar */
+    .search-bar {
+      position: relative;
+      background-color:#222;
+      border-radius:6px;
+      margin-left:20px;
+    }
+
+    /* Search Icon */
+    .search-bar i {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: #222;
+    }
+
+    /* Scrolling Text Bar Below Header */
+    .scroll-text {
+      position: fixed;
+      top: 55px;
+      left: 0; right: 0;
+      background: #111;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      z-index: 1000;
+    }
+
+    .scroll-text p {
+      white-space: nowrap;
+      padding-left: 100%;
+      animation: scrollLeft 20s linear infinite;
+      font-size: 13px;
+      color: #ccc;
+    }
+
+    /* Scroll animation keyframes */
+    @keyframes scrollLeft {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* Product List Container */
+    .product {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top:100px;
+      
+    }
+
+    /* Individual Product Card */
+    .product-item {
+      border: 1px solid #444;
+      background: #222;
+      padding: 10px;
+      border-radius: 10px;
+      width: 45%;
+      max-width: 280px;
+    }
+
+    /* Product Image Styling */
+    .product-item img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    /* Common Button Styling */
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #ff9900;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* Purchase Modal (Hidden by Default) - Fixed to fully overlay all content */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.97);
+  z-index: 9999999; /* Make sure it is above everything else */
+  overflow-y: auto;
+  padding: 20px;
+  backdrop-filter: blur(2px);
+}
+
+.modal-content {
+  background: #111;
+  margin: 80px auto;
+  padding: 20px;
+  max-width: 600px;
+  border-radius: 10px;
+  color: #fff;
+  position: relative;
+  box-shadow: 0 0 20px rgba(255,255,255,0.1);
+}
+
+    /* Modal Close Button */
+    .close {
+      position: absolute;
+      right: 15px;
+      top: 10px;
+      font-size: 28px;
+      cursor: pointer;
+    }
+
+    .modal-content img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    /* Form Field Wrapper */
+    .form-field {
+      margin: 10px 0;
+    }
+
+    /* Input, Select, Textarea Styling */
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+    }
+
+    /* Transport Cost Box */
+    #transport-cost {
+      background: #eee;
+      color: #000;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+
+    /* Button Container in Modal */
+    .purchase-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+      z-index:9999999;
+     
+    }
+
+    /* Button Variants */
+    .add-market { background: #444; color: #fff; }
+    .purchase-now { background: #0f0; color: #000; }
+
+    /* Fixed Bottom Navigation Bar */
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to right, #000, #1a1a1a);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      z-index: 999;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Individual Nav Item */
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #ccc;
+      font-size: 14px;
+    }
+
+    .nav-item i {
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .nav-item:hover {
+      color: #00bfff;
+    }
+
+    /* For embedded content like Google Forms */
+    iframe {
+      border: none;
+      width: 100%;
+      height: 750px;
+      margin-top: 15px;
+      border-radius: 8px;
+    }
+
+    /* Support Button */
+    .support-btn {
+      margin-top: 10px;
+      background: #ff9900;
+      color: #000;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+    }
+  
+        
+         /* Floating chat button */
+    .chat-btn {
+      position: fixed;
+      bottom: 50px;
+      right: 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 28px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      cursor: pointer;
+      z-index: 9999;
+    }
+
+    /* Chat window */
+    .chat-box {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 300px;
+      max-height: 400px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 9999;
+    }
+
+    .chat-header {
+      background: #007bff;
+      color: black;
+      padding: 10px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-body {
+      padding: 10px;
+      flex: 1;
+      overflow-y: auto;
+      background: #f9f9f9;
+    }
+
+    .chat-msg {
+      margin: 10px 0;
+      color:black;
+    }
+
+    .chat-msg.bot {
+      text-align: left;
+    }
+
+    .chat-msg.user {
+      text-align: right;
+    }
+
+    .chat-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 10px;
+    }
+
+    .chat-options button {
+      flex: 1;
+      padding: 5px;
+      background: #e1ecf4;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .close-chat {
+      cursor: pointer;
+      font-size: 18px;
+    }
+    
+    /* Confirmation Popup Styling */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #111;
+      color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0,0,0,0.8);
+      z-index: 2000;
+    }
+
+    .popup h3 {
+      color: #0f0;
+      margin-bottom: 10px;
+    }
+    .float-btn {
+  position: fixed;
+  bottom: 40px;
+  left: 20px;
+  background-color: #ffaa00;
+  color: #000;
+  padding: 15px 20px;
+  border-radius: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: background 0.3s ease;
+  z-index: 1000;
+}
+
+.float-btn:hover {
+  background-color: #ffcc33;
+}
+
+}
+
+
+<!--service section-->
+
+
+.services-container {
+  display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .service-box {
+    margin-top:10px;
+    margin-buttom:40px;
+
+      background: #111;
+      border: 1px solid #444;
+      border-left: 5px solid #0f0;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      animation: slideInUp 0.8s ease forwards;
+    }
+
+    .service-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0, 255, 0, 0.3);
+    }
+
+    .service-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #0f0;
+      margin-bottom: 0.5rem;
+    }
+
+    .service-desc {
+      font-size: 1rem;
+      color: #ccc;
+      line-height: 1.6;
+     
+      
+    }
+    .service{
+    margin-top:100px;
+    text-align: center;
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 2rem;
+      color: #ffd700;
+      text-shadow: 2px 2px 8px #000;
+      animation: fadeInDown 1s ease;
+    }
+
+    <!--chat section --->
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .service-title {
+        font-size: 1.2rem;
+      }
+      .service-desc {
+        font-size: 0.9rem;
+      }
+    }
+    
+    
+    
+    
+    .issue-select-container {
+      margin: 20px 0;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    select {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background-color: #1a1a2e;
+      color: white;
+      outline: none;
+      box-shadow: 0 0 10px #3db2ff88;
+    }
+
+    .chat-popup {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 320px;
+      background: #0a0f33;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #3db2ff88;
+      padding: 20px;
+      z-index: 1000;
+      animation: slideUp 0.5s ease-in-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .chat-popup h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #3db2ff;
+    }
+
+    .chat-popup input,
+    .chat-popup textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #1a1a2e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+    }
+
+    .chat-popup button {
+      width: 90%;
+      background: #3db2ff;
+      color: #000;
+      font-weight: bold;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #3db2ff;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    /* Confirmation Popup Styling */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #111;
+      color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0,0,0,0.8);
+      z-index: 2000;
+    }
+
+    .popup h3 {
+      color: #0f0;
+      margin-bottom: 10px;
+    }
+
+    .popup button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #3db2ff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #000;
+      font-weight: bold;
+      }
+      
+      
+      
+      
+      
+      <!-- reels section -->
+      #searchBar {
+      width: 90%;
+      margin: 80px auto 10px;
+      display: block;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 1rem;
+      box-shadow: 0 0 10px rgba(0,255,0,0.3);
+    }
+
+    #video-feed {
+      position: absolute;
+      top: 0px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
+      padding-bottom: 100px;
+    }
+
+    .video-container {
+      height: 100vh;
+      scroll-snap-align: start;
+      position: relative;
+      margin-bottom: 20px;
+      box-shadow: 0 0 20px rgba(0,255,0,0.15);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-info {
+      position: absolute;
+      bottom: 60px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      animation: fadeInUp 1s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .actions {
+      position: absolute;
+      right: 10px;
+      bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 10;
+    }
+
+    .actions button {
+      background: #0f0;
+      color: black;
+      border: none;
+      font-size: 1.1rem;
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #0f0;
+      transition: transform 0.2s ease;
+    }
+
+    .actions button:hover {
+      transform: scale(1.05);
+    }
+
+    .floating-plus {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background: #0f0;
+      color: black;
+      font-size: 2rem;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      z-index: 20;
+      box-shadow: 0 0 15px #0f0;
+    }
+.modal, .admin-popup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
+      z-index: 30;
+    }
+    input[type="file"] {
+      display: none;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
+      z-index: 30;
+    }
+
+    .modal-box {
+      background: #111;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .modal-box input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    .modal-box button {
+      margin-top: 10px;
+      padding: 10px;
+      background: #0f0;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .drop-zone {
+      margin: 20px auto;
+      width: 90%;
+      max-width: 500px;
+      padding: 30px;
+      border: 2px dashed #0f0;
+      border-radius: 15px;
+      text-align: center;
+      color: #ccc;
+      cursor: pointer;
+      background: rgba(255,255,255,0.03);
+      animation: fadeInUp 1s ease;
+    }
+
+    .drop-zone.dragover {
+      background: rgba(0,255,0,0.1);
+      color: #0f0;
+    }
+
+    @media (max-width: 600px) {
+      .actions button {
+        font-size: 1rem;
+        padding: 8px;
+      }
+
+      .modal-box {
+        width: 95%;
+      }
+    
+    
+/* Splash Screen */
+    #intro-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom right, #000000, #1a1a1a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 9999;
+      animation: fadeOut 1s ease 4s forwards;
+    }
+
+    #intro-logo {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      margin-bottom: 30px;
+      animation: popIn 1s ease forwards;
+      opacity: 0;
+      transform: scale(0.6);
+    }
+
+    #intro-text {
+      font-size: 2.2em;
+      font-family: 'Orbitron', sans-serif;
+      color: #00ffaa;
+      letter-spacing: 3px;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00ffaa;
+      opacity: 0;
+      transform: rotate(-360deg) scale(0.5);
+      animation: spinIn 1.3s ease-out 0.8s forwards;
+    }
+
+    #typing-text {
+      margin-top: 12px;
+      font-size: 1.1em;
+      color: #ccc;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 2px solid #00ffaa;
+      width: 0;
+      animation: typing 2s steps(30, end) 2s forwards;
+    }
+
+    @keyframes popIn {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes spinIn {
+      to {
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+      }
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 330px; }
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(1.1);
+      }
+    }
+
+    
+    
+  </style>
+</head>
+<body>
+
+<header>🛍️ Shopping App</header>
+<!-- Intro Splash -->
+
+  <div id="intro-screen">
+    <img src="logo.jpg" alt="Logo" id="intro-logo">
+    <div id="intro-text">EasyShop Online</div>
+    <div id="typing-text">Bringing the market to your doorstep 🛍️</div>
+    <audio id="intro-sound" src="intro-sound.mp3" preload="auto"></audio>
+  </div>
+
+
+<!-- HOME SECTION -->
+<section id="section-home" class="main-section">
+<header>
+  <h1>shopping</h1>
+  <div class="search-bar">
+    <input type="search" id="search-input" placeholder="Search products...">
+    <i class="fas fa-search"></i>
+  </div>
+</header>
+
+<!-- Scrolling Text Banner -->
+<div class="scroll-text">
+  <p>We offer best service &nbsp; We offer best service &nbsp;</p>
+</div>
+<!-- Floating Button -->
+<button class="chat-btn" id="openChat">AI </button>
+
+<!-- Chat Box -->
+<div class="chat-box" id="chatBox">
+  <div class="chat-header">
+    EasyBot 🤖
+    <span class="close-chat" id="closeChat">✖</span>
+  </div>
+  <div class="chat-body" id="chatBody">
+    <div class="chat-msg bot">👋 Hi there! I'm EasyBot. How can I help you today?</div>
+    <div class="chat-options">
+      <button onclick="respond('browse')">Browse Products</button>
+      <button onclick="respond('track')">Track My Order</button>
+      <button onclick="respond('help')">Talk to Support</button>
+    </div>
+  </div>
+</div>
+<div class="float-btn" onclick="window.location.href='ooo.html'">
+  Check for Info and Buy
+</div>
+<a href="dashboard.html" class="go-dashboard-btn">🛠️ Go to Dashboard</a>
+
+<!-- Product Grid Container (populated via JavaScript) -->
+<div class="product" id="product-container"></div>
+
+
+<!-- Full-Screen Modal for Purchase Process -->
+
+<div id="purchase-modal" class="modal">
+  <div class="modal-content">
+  
+
+    <!-- Close Button -->
+    <span class="close">&times;</span>
+
+    <!-- Product Details in Modal -->
+    <img id="modal-image" src="" />
+    <h3 id="modal-description"></h3>
+    <p id="modal-inner-description"></p>
+    <p><strong>Price: ₦<span id="modal-price"></span></strong></p>
+    
+    
+    <p class="detail">Note:Copy of your order will be send to you through your email
+    and your order number </p>
+
+    <!-- Purchase Form (submits to Getform endpoint) -->
+    <form id="purchase-form" action="https://getform.io/f/apjplxwa" method="POST" enctype="multipart/form-data">
+      
+      <!-- Buyer Info -->
+      <div class="form-field">
+        <input type="text" id="buyer-name" name="Buyer Name" placeholder="Your Name" required />
+      </div>
+      <div class="form-field">
+        <input type="email" id="buyer-email" name="Buyer Email" placeholder="Your Email" required />
+      </div>
+
+      <!-- Delivery Method -->
+      <div class="form-field"> 
+        <select id="delivery-method" name="Delivery Method" required>
+          <option value="">Select Delivery Method</option>
+          <option value="pickup">Pickup</option>
+          <option value="service">Service</option>
+        </select>
+      </div>
+
+      <!-- Location Selection for 'Service' -->
+      <div class="form-field" id="location-select" style="display:none;"> 
+        <select id="delivery-location" name="Delivery Location">
+          <option value="">Select State</option>
+          <option value="Lagos">Lagos</option>
+          <option value="Abuja">Abuja</option>
+          <option value="Kano">Kano</option>
+          <option value="Others">Other States</option>
+        </select>
+      </div>
+
+      <!-- Dynamic Transport Cost Display -->
+      <div id="transport-cost" style="display:none;"></div>
+
+      <!-- Full Delivery Address -->
+      <div class="form-field" id="addressSection" style="display:none;"> 
+        <textarea id="address" name="Address" rows="3" placeholder="Full address..."></textarea>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="form-field"> 
+        <select id="payment-method" name="Payment Method" required>
+          <option value="">Select Payment Method</option>
+          <option value="bank">Bank Transfer</option>
+          <option value="pay-after-delivery">Pay After Delivery</option>
+        </select>
+      </div>
+
+      <!-- Bank Transfer Details (shown conditionally) -->
+      <div id="bank-details" style="display:none;">
+        <strong>Bank Details:</strong><br />
+        XYZ Bank<br />Acc No: 1234567890<br />Name: Jumia Nigeria
+      </div>
+
+      <!-- Upload Receipt (shown conditionally) -->
+      <div id="receipt-upload" style="display:none;">
+        <div class="form-field">
+          <input type="file" id="image-input" name="image" accept="image/*">
+          <div id="image-preview-box" style="width: 100px; height: 100px; border: 1px solid">
+            <img id="image-preview" src="" alt="Image Preview">
+          </div>
+        </div>
+      </div>
+
+      <!-- Info for 'Pay After Delivery' -->
+      <div id="pay-delivery" style="display:none; color: #d97706; font-size: 14px; margin-bottom: 10px;">
+        <br>
+        <strong>Your product is helping oh well</strong>
+      </div>
+
+      <!-- Quantity Input -->
+      <div class="form-field">
+        <input type="number" id="quantity" name="Quantity" placeholder="Enter Quantity (e.g., 1, 2)" min="1" required />
+      </div>
+
+      <!-- Additional Goods Question -->
+      <div class="form-field">
+        <label for="more-goods">Do you want to order more goods?</label>
+        <select id="more-goods" name="More Goods" required>
+          <option value="">Select an option</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+
+      <!-- Additional Goods Info (shown if 'Yes') -->
+      <div id="more-goods-info" style="display:none; color: #d97706; font-size: 14px; margin-bottom: 10px;">
+        Note: All goods you order after placing this purchase will be grouped under a single delivery. <br>
+        <strong>Transport fare will be charged only once, not for each product.
+        Ignore  the transport fees for the rest of your order. All your orders will be send to you on email </strong>
+      </div>
+       <div class="purchase-buttons">
+        <button class="add-market" type="button">Add to Market</button>
+        <button class="purchase-now" type="submit">Purchase Now</button>
+      </div>
+      </div>
+      
+      
+
+      <!-- Submit Buttons -->
+     
+      
+    </form>
+  <a href="godd.html"><button class="float-btn chat-btn">
+    <div><p class="chat">check about in full </p></div></button></a>
+
+
+<!-- Confirmation Popup -->
+<div id="confirmationPopup" class="popup">
+  <h3>✅ Payment Info Submitted Successfully!</h3>
+  <p>We will verify and contact you shortly.</p>
+</div>
+
+</section>
+
+<!-- SERVICES SECTION -->
+
+<section id="section-services" class="main-section">
+   <header>🛒 Our Premium Services</header>
+   <h1 class="service">🛒 Our Premium Services</h1>
+
+  <div class="services-container">
+    <div class="service-box">
+      <div class="service-title">Fast Doorstep Delivery</div>
+      <div class="service-desc">
+        We ensure swift and secure delivery of your products across all regions. Track your items live and get updates till it reaches your hands.
+      </div>
+    </div>
+
+    <div class="service-box">
+      <div class="service-title">24/7 Customer Support</div>
+      <div class="service-desc">
+        Our support team is always available to help with product inquiries, orders, refunds, or general issues. Chat or call anytime.
+      </div>
+    </div>
+    
+
+    <div class="service-box">
+      <div class="service-title">Secure Payment Methods</div>
+      <div class="service-desc">
+        Pay with confidence using secure channels including bank transfer, debit card, and our pay-on-delivery option.
+      </div>
+    </div>
+
+    <div class="service-box">
+      <div class="service-title">Verified Product Quality</div>
+      <div class="service-desc">
+        Every item on our platform goes through a strict verification process to ensure quality, durability, and performance.
+      </div>
+    </div>
+
+    <div class="service-box">
+      <div class="service-title">Real Customer Reviews</div>
+      <div class="service-desc">
+        Get honest insights from buyers who already used the products. We don’t filter real reviews — shop based on trust.
+      </div>
+    </div>
+
+    <div class="service-box">
+      <div class="service-title">Flexible Return Policy</div>
+      <div class="service-desc">
+        Not satisfied? You can easily request a return or replacement within 7 days. No stress. No hidden rules.
+      </div>
+    </div>
+  </div>
+  <div style= "height:100px;">
+    </div>
+</section>
+
+<!-- CHAT SECTION -->
+<section id="section-chat" class="main-section">
+ <h1 class="service">How Can We Help You Today?</h1>
+
+  <div class="issue-select-container">
+    <select id="issue-select">
+      <option value="">-- Select an Issue --</option>
+      <option value="How do I return goods?">How do I return goods?</option>
+      <option value="I received a damaged product">I received a damaged product</option>
+      <option value="Wrong item delivered">Wrong item delivered</option>
+      <option value="Delivery taking too long">Delivery taking too long</option>
+      <option value="How to track my order">How to track my order</option>
+      <option value="Payment not going through">Payment not going through</option>
+      <option value="Charged twice">Charged twice</option>
+      <option value="Cannot log in">Cannot log in</option>
+      <option value="Reset my password">Reset my password</option>
+      <option value="Cancel my order">Cancel my order</option>
+      <option value="Where is my receipt?">Where is my receipt?</option>
+      <option value="Issues with bank transfer">Issues with bank transfer</option>
+      <option value="How to upload proof of payment">How to upload proof of payment</option>
+      <option value="How to change my address">How to change my address</option>
+      <option value="Account locked">Account locked</option>
+      <option value="How to use coupon code">How to use coupon code</option>
+      <option value="My product hasn’t arrived">My product hasn’t arrived</option>
+      <option value="Delayed refund">Delayed refund</option>
+      <option value="App not working">App not working</option>
+      <option value="Other issue">Other issue</option>
+    </select>
+  </div>
+
+  <div class="chat-popup" id="chatPopup">
+    <button class="close-btn" onclick="closeChat()">×</button>
+    <h2>Tell Us More</h2>
+    <form id="purchase-form" method="POST" enctype="multipart/form-data">
+      <input type="text" name="name" placeholder="Your Name" required />
+      <input type="email" name="email" placeholder="Your Email" required />
+      <input type="text" id="selected-issue" name="issue" placeholder="Issue" readonly />
+      <textarea name="message" placeholder="Explain your issue..." rows="5" required></textarea>
+      <button type="submit">Send to Support</button>
+    </form>
+  </div>
+
+  <!-- Confirmation Popup -->
+  <div id="confirmationPopup" class="popup">
+    <h3>✅ Payment Info Submitted Successfully!</h3>
+    <p>We will verify and contact you shortly.</p>
+    <button onclick="closeConfirmation()">OK</button>
+  </div>
+</section>
+
+
+<!-- REELS SECTION -->
+<section id="section-reels" class="main-section">
+  <header>Shopping Reels</header>
+
+  <input id="searchBar" type="text" placeholder="Search by product or category" oninput="filterVideos()" />
+
+  <div id="video-feed"></div>
+
+  <div class="drop-zone" id="dropZone">📂 Drag & Drop to Upload Video</div>
+
+  <button class="floating-plus" onclick="openUpload()">+</button>
+  <input type="file" accept="video/*" id="videoUploader" />
+
+<!-- Admin Password Prompt -->
+<div class="admin-popup" id="adminPopup">
+  <div class="modal-box">
+    <h3>Admin Only</h3>
+    <p>Enter Password to Upload</p>
+    <input type="password" id="adminPass" placeholder="Password" />
+    <button onclick="checkAdmin()">Enter</button>
+  </div>
+</div>
+  <!-- Upload Modal -->
+  <div class="modal" id="uploadModal">
+    <div class="modal-box">
+      <h3>Enter Upload Details</h3>
+      <input type="text" id="videoName" placeholder="Video Name" />
+      <input type="text" id="videoCategory" placeholder="Category" />
+      <button onclick="submitUpload()">Upload</button>
+    </div>
+    
+  </div>
+</section>
+
+<!-- DASHBOARD SECTION -->
+<section id="dashboard">
+  <h2>📦 Product Dashboard</h2>
+  <div id="dashProtected">
+    <input type="password" placeholder="Enter Dashboard Password" id="dashPass" />
+    <button onclick="unlockDashboard()">Unlock</button>
+  </div>
+  <div id="dashContent" style="display:none;">
+    <input type="file" id="prodImg" />
+    <input type="text" id="prodName" placeholder="Product Name" />
+    <input type="text" id="prodDesc" placeholder="Product Description" />
+    <input type="number" id="prodPrice" placeholder="Product Price" />
+    <button onclick="addProduct()">Add Product</button>
+  </div>
+</section>
+
+<!-- FOOTER NAVIGATION -->
+<nav>
+  <button onclick="showSection('home')"><i class="fas fa-home"></i></button>
+ 
+  <button onclick="showSection('reels')"><i class="fas fa-video"></i></button>
+  <button onclick="showSection('services')"><i class="fas fa-concierge-bell"></i></button>
+  <button onclick="showSection('chat')"><i class="fas fa-comments"></i></button>
+  
+</nav>
+<script>
+
+
+// === GLOBAL DOM REFERENCES ===
+const modal = document.getElementById('purchase-modal');
+const closeBtn = document.querySelector('.close');
+const container = document.getElementById('product-container');
+const deliveryMethod = document.getElementById('delivery-method');
+const locationSelect = document.getElementById('location-select');
+const deliveryLocation = document.getElementById('delivery-location');
+const transportCost = document.getElementById('transport-cost');
+const addressSection = document.getElementById('addressSection');
+const paymentMethod = document.getElementById('payment-method');
+const bankDetails = document.getElementById('bank-details');
+const receiptUpload = document.getElementById('receipt-upload');
+const payDelivery = document.getElementById('pay-delivery');
+const purchaseForm = document.getElementById('purchase-form');
+const imageInput = document.getElementById('image-input');
+const imagePreviewBox = document.getElementById('image-preview-box');
+const imagePreview = document.getElementById('image-preview');
+const addToMarketButton = document.querySelector('.add-market');
+const searchInput = document.getElementById('search-input');
+const purchasedProductsContainer = document.getElementById('purchased-products-container');
+const select = document.getElementById('issue-select');
+const popup = document.getElementById('chatPopup');
+const selectedIssue = document.getElementById('selected-issue');
+const confirmationPopup = document.getElementById('confirmationPopup');
+const chatBtn = document.getElementById('openChat');
+const chatBox = document.getElementById('chatBox');
+const closeChatBtn = document.getElementById('closeChat');
+const chatBody = document.getElementById('chatBody');
+
+// === VIDEO FEATURE REFERENCES ===
+const videoFeed = document.getElementById("video-feed");
+const dropZone = document.getElementById("dropZone");
+const videoUploader = document.getElementById("videoUploader");
+const uploadModal = document.getElementById("uploadModal");
+
+let selectedFile = null;
+let videos = JSON.parse(localStorage.getItem("reelVideos") || "[]");
+let images = JSON.parse(localStorage.getItem('images')) || [];
+
+// === PRODUCT DISPLAY ===
+images.forEach((item, index) => {
+  const card = document.createElement('div');
+  card.className = 'product-item';
+  card.innerHTML = `
+    <img src="${item.src}" />
+    <p>${item.description}</p>
+    <strong>₦${item.price}</strong>
+    <button onclick="openModal(${index})">Purchase</button>
+  `;
+  container.appendChild(card);
+});
+
+function openModal(index) {
+  const item = images[index];
+  document.getElementById('modal-image').src = item.src;
+  document.getElementById('modal-description').textContent = item.description;
+  document.getElementById('modal-inner-description').textContent = item.innerDescription;
+  document.getElementById('modal-price').textContent = item.price;
+
+  ['Product Price', 'Product Description'].forEach(name => {
+    const existing = purchaseForm.querySelector(`input[name="${name}"]`);
+    if (existing) existing.remove();
+  });
+
+  const priceInput = document.createElement('input');
+  priceInput.type = 'hidden';
+  priceInput.name = 'Product Price';
+  priceInput.value = item.price;
+  purchaseForm.appendChild(priceInput);
+
+  const descInput = document.createElement('input');
+  descInput.type = 'hidden';
+  descInput.name = 'Product Description';
+  descInput.value = item.description;
+  purchaseForm.appendChild(descInput);
+
+  modal.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+closeBtn.onclick = () => {
+  modal.style.display = 'none';
+  document.body.style.overflow = 'auto';
+};
+
+window.onclick = e => {
+  if (e.target == modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+};
+
+// === PURCHASED PRODUCTS ===
+if (purchasedProductsContainer) {
+  const purchased = JSON.parse(localStorage.getItem('purchasedProducts')) || [];
+  purchased.forEach(product => {
+    purchasedProductsContainer.innerHTML += `
+      <div class="purchased-product">
+        <img src="${product.image}" />
+        <p>${product.description}</p>
+        <strong>₦${product.price}</strong>
+      </div>
+    `;
+  });
+}
+
+// === DELIVERY & PAYMENT LOGIC ===
+deliveryMethod.addEventListener('change', () => {
+  const isService = deliveryMethod.value === 'service';
+  locationSelect.style.display = isService ? 'block' : 'none';
+  transportCost.style.display = 'none';
+  addressSection.style.display = 'none';
+  if (!isService) {
+    deliveryLocation.value = '';
+    document.getElementById('delivery-address').value = '';
+  }
+});
+
+deliveryLocation.addEventListener('change', () => {
+  let cost = '';
+  switch (deliveryLocation.value) {
+    case 'Lagos': cost = '₦1000'; break;
+    case 'Abuja': cost = '₦1500'; break;
+    case 'Kano': cost = '₦1200'; break;
+    case 'Others': cost = '₦2000'; break;
+  }
+  if (cost) {
+    transportCost.textContent = `Transport Cost: ${cost}`;
+    transportCost.style.display = 'block';
+    addressSection.style.display = 'block';
+  }
+});
+
+paymentMethod.addEventListener('change', () => {
+  const bank = paymentMethod.value === 'bank';
+  bankDetails.style.display = bank ? 'block' : 'none';
+  receiptUpload.style.display = bank ? 'block' : 'none';
+  payDelivery.style.display = paymentMethod.value === 'pay-after-delivery' ? 'block' : 'none';
+  if (!bank) {
+    imageInput.value = '';
+    imagePreviewBox.style.display = 'none';
+  }
+});
+
+imageInput.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      imagePreview.src = reader.result;
+      imagePreviewBox.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+addToMarketButton.addEventListener('click', () => {
+  const product = {
+    image: document.getElementById('modal-image').src,
+    description: document.getElementById('modal-description').textContent,
+    price: document.getElementById('modal-price').textContent,
+  };
+  const purchased = JSON.parse(localStorage.getItem('purchasedProducts')) || [];
+  purchased.push(product);
+  localStorage.setItem('purchasedProducts', JSON.stringify(purchased));
+  window.location.href = 'index.html';
+});
+
+// === SEARCH ===
+searchInput.addEventListener('input', () => {
+  const value = searchInput.value.toLowerCase();
+  document.querySelectorAll('.product-item').forEach(item => {
+    const text = item.querySelector('p').textContent.toLowerCase();
+    item.style.display = text.includes(value) ? 'block' : 'none';
+  });
+});
+
+document.getElementById('more-goods').addEventListener('change', function () {
+  document.getElementById('more-goods-info').style.display = this.value === 'yes' ? 'block' : 'none';
+});
+
+// === CHAT BOT ===
+chatBtn.onclick = () => chatBox.style.display = 'flex';
+closeChatBtn.onclick = () => chatBox.style.display = 'none';
+
+function respond(type) {
+  let userText = "", botReply = "";
+  switch(type) {
+    case 'browse': userText = "I want to browse products."; botReply = "Great! Use the search bar to explore."; break;
+    case 'track': userText = "I want to track my order."; botReply = "Check your email for the order tracking."; break;
+    case 'help': userText = "I need help from support."; botReply = "Email: <b>support@yourshop.com</b> or 📞 0900-123-4567"; break;
+  }
+  chatBody.innerHTML += `<div class="chat-msg user">${userText}</div>`;
+  setTimeout(() => {
+    chatBody.innerHTML += `<div class="chat-msg bot">${botReply}</div>`;
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }, 500);
+}
+
+// === SUPPORT ISSUE SELECT ===
+select.addEventListener('change', () => {
+  if (select.value) {
+    selectedIssue.value = select.value;
+    popup.style.display = 'block';
+  }
+});
+function closeChatPopup() {
+  popup.style.display = 'none';
+  select.value = '';
+}
+function closeConfirmation() {
+  confirmationPopup.style.display = 'none';
+  closeChatPopup();
+}
+
+// === FORM SUBMISSION ===
+purchaseForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  const formData = new FormData(purchaseForm);
+  fetch(purchaseForm.action, {
+    method: 'POST',
+    body: formData
+  }).then(response => {
+    if (response.ok) {
+      confirmationPopup.style.display = 'block';
+      setTimeout(() => {
+        confirmationPopup.style.display = 'none';
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        purchaseForm.reset();
+      }, 300000);
+    } else {
+      alert("Something went wrong.");
+    }
+  }).catch(() => alert("Network error."));
+});
+
+// === VIDEO RENDER ===
+function renderVideos() {
+  videoFeed.innerHTML = "";
+  videos.forEach((v, i) => {
+    const container = document.createElement("div");
+    container.className = "video-container";
+
+    const video = document.createElement("video");
+    video.src = v.url;
+    video.controls = true;
+    video.autoplay = true;
+    video.loop = true;
+    video.playsInline = true;
+
+    const info = document.createElement("div");
+    info.className = "video-info";
+    info.innerHTML = `<strong>${v.name}</strong><br>${v.category}`;
+
+    const actions = document.createElement("div");
+    actions.className = "actions";
+    actions.innerHTML = `
+      <button onclick="likeVideo(${i})">❤️ ${v.likes}</button>
+      <button onclick="deleteVideo(${i})">🗑️</button>
+    `;
+
+    container.appendChild(video);
+    container.appendChild(info);
+    container.appendChild(actions);
+    videoFeed.appendChild(container);
+    observer.observe(video);
+  });
+}
+
+function openUpload() {
+  videoUploader.click();
+}
+
+videoUploader.addEventListener("change", () => {
+  selectedFile = videoUploader.files[0];
+  if (selectedFile) uploadModal.style.display = "flex";
+});
+
+function submitUpload() {
+  const name = document.getElementById("videoName").value;
+  const category = document.getElementById("videoCategory").value;
+  if (!selectedFile || !name || !category) return alert("Please fill in all fields!");
+  const url = URL.createObjectURL(selectedFile);
+  videos.unshift({ url, name, category, likes: 0 });
+  localStorage.setItem("reelVideos", JSON.stringify(videos));
+  uploadModal.style.display = "none";
+  renderVideos();
+}
+
+function likeVideo(i) {
+  videos[i].likes += 1;
+  localStorage.setItem("reelVideos", JSON.stringify(videos));
+  renderVideos();
+}
+
+function deleteVideo(i) {
+  if (confirm("Delete this video?")) {
+    videos.splice(i, 1);
+    localStorage.setItem("reelVideos", JSON.stringify(videos));
+    renderVideos();
+  }
+}
+
+function filterVideos() {
+  const term = document.getElementById("searchBar").value.toLowerCase();
+  const filtered = videos.filter(v => v.name.toLowerCase().includes(term) || v.category.toLowerCase().includes(term));
+  videoFeed.innerHTML = "";
+  filtered.forEach((v, i) => {
+    const container = document.createElement("div");
+    container.className = "video-container";
+
+    const video = document.createElement("video");
+    video.src = v.url;
+    video.controls = true;
+    video.autoplay = true;
+    video.loop = true;
+    video.playsInline = true;
+
+    const info = document.createElement("div");
+    info.className = "video-info";
+    info.innerHTML = `<strong>${v.name}</strong><br>${v.category}`;
+
+    const actions = document.createElement("div");
+    actions.className = "actions";
+    actions.innerHTML = `
+      <button onclick="likeVideo(${i})">❤️ ${v.likes}</button>
+      <button onclick="deleteVideo(${i})">🗑️</button>
+    `;
+
+    container.appendChild(video);
+    container.appendChild(info);
+    container.appendChild(actions);
+    videoFeed.appendChild(container);
+    observer.observe(video);
+  });
+}
+
+// === DRAG & DROP VIDEO ===
+dropZone.addEventListener("dragover", e => {
+  e.preventDefault();
+  dropZone.classList.add("dragover");
+});
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("dragover");
+});
+dropZone.addEventListener("drop", e => {
+  e.preventDefault();
+  dropZone.classList.remove("dragover");
+  selectedFile = e.dataTransfer.files[0];
+  if (selectedFile && selectedFile.type.startsWith("video/")) {
+    uploadModal.style.display = "flex";
+  }
+});
+
+// === AUTOPLAY OBSERVER ===
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    const video = entry.target;
+    if (entry.isIntersecting) {
+      document.querySelectorAll("video").forEach(v => v.pause());
+      video.play();
+    } else {
+      video.pause();
+    }
+  });
+}, { threshold: 0.9 });
+
+renderVideos();
+// === SECTION NAVIGATION HANDLER ===
+function showSection(sectionId) {
+  const allSections = document.querySelectorAll('.main-section');
+  allSections.forEach(sec => sec.style.display = 'none');
+
+  const activeSection = document.getElementById('section-' + sectionId);
+  if (activeSection) {
+    activeSection.style.display = 'block';
+  }
+}
+window.onload = () => {
+  showSection('home');
+};
+
+// === INTRO SOUND & SCROLL ON LOAD ===
+window.addEventListener('load', () => {
+  const sound = document.getElementById("intro-sound");
+  if (sound) {
+    sound.play().catch(() => {});
+  }
+
+  // Smooth scroll to #home section (can be section-home or just an element with id="home")
+  setTimeout(() => {
+    const homeSection = document.getElementById("home") || document.getElementById("section-home");
+    if (homeSection) {
+      homeSection.scrollIntoView({ behavior: "smooth" });
+    }
+  }, 4200);
+});
+
+</script>
+</body>
+</html>

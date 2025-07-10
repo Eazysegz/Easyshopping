@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Page - $400 Template</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #000000, #222222);
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #1a1a1a;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.05);
+    }
+    h1 {
+      text-align: center;
+      color: #00ffcc;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      margin-bottom: 15px;
+    }
+    button {
+      background-color: #00ffcc;
+      color: #000;
+      border: none;
+      padding: 15px;
+      width: 100%;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .method-section {
+      display: none;
+      background: #111;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .popup {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: #1a1a1a;
+      padding: 30px;
+      border-radius: 10px;
+      color: #00ffcc;
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+      text-align: center;
+      z-index: 999;
+      transition: 0.3s ease;
+    }
+    .popup.show {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .support-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: #ffaa00;
+      color: #000;
+      padding: 12px 20px;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Pay $400 to Get Template</h1>
+
+  <label>Select Payment Method:</label>
+  <select id="paymentMethod">
+    <option value="">-- Choose --</option>
+    <option value="bank">Bank Transfer (Nigeria)</option>
+    <option value="metamask">Wallet Payment (Crypto)</option>
+    
+  </select>
+
+  <!-- Bank Transfer -->
+  <div class="method-section" id="bankSection">
+    <p><strong>Bank Name:</strong> kuda</p>
+    <p><strong>Account Name:</strong> Amos Abraham</p>
+    <p><strong>Account Number:</strong> 2075535159</p>
+    <h2>$400~600,000 nair</h2>
+  </div>
+
+  <!-- Wallet (Crypto) -->
+  <div class="method-section" id="metamaskSection">
+    <p><strong>Wallet Name:</strong> Eazysegzweb</p>
+    <p><strong>Wallet Address:</strong> <span style="word-break: break-all;">0x20c461dcf8aFdCF2F5307F83634Ef827E146cBB6</span></p>
+    <p><strong>Network:</strong> EVM-Compatible Chains Only</p>
+    <p style="font-size: 14px; color: #ccc;">
+      ⚠️ Please send <strong>USDT / ETH / BNB / MATIC</strong> equivalent to <strong>$400</strong> from a wallet that supports EVM networks.
+    </p>
+
+    <!-- ⚠️ Caution Box -->
+    <div style="
+      background: #222;
+      color: #ffaa00;
+      padding: 15px 20px;
+      border-left: 5px solid #00ffcc;
+      border-radius: 10px;
+      font-size: 15px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(0,255,204,0.1);
+    ">
+      ⚠️ <strong>Important Caution:</strong><br><br>
+      This wallet address only accepts payments on <strong>EVM-Chains networks</strong> like 
+      <span style="color: #00ffcc;">Ethereum, BNB Smart Chain, Polygon, Avalanche</span>.
+      <br><br>
+      ❌ <strong>Do NOT send</strong> tokens using unsupported chains (e.g., Tron, Solana, or non-EVM networks), or your funds may be lost permanently.
+      <br><br>
+      ✅ Only send the equivalent of <strong>$400</strong> in <strong>USDT, ETH, BNB, or MATIC</strong> depending on the selected network.
+      <br><br>
+      📌 Please double-check network compatibility before proceeding.
+      <br><br>
+      ⚠️ <strong>We are not responsible</strong> for any lost funds due to incorrect network selection or wallet type. Make sure your wallet supports the selected chain.
+    </div>
+
+    <p><strong>Scan QR Code to Pay:</strong></p>
+    <img src="wallet-qr.png" alt="Wallet QR Code" style="width: 100%; border-radius: 10px; margin-top: 10px;" />
+  </div>
+
+  <!-- Paystack -->
+  <div class="method-section" id="cardSection">
+    <p>Click the button below to pay with your debit/credit card:</p>
+    <a href="https://paystack.com/pay/your-template-link" target="_blank">
+      <button style="background: #00bfff; color: white;">Pay with Card</button>
+    </a>
+  </div>
+
+  <!-- Receipt Upload -->
+  <form id="paymentForm" action="https://getform.io/f/apjplxwa" method="POST" enctype="multipart/form-data">
+    <label for="name">Full Name:</label>
+    <input type="text" name="name" required>
+
+    <label for="email">Email Address:</label>
+    <input type="email" name="email" required>
+
+    <label for="receipt">Upload Receipt:</label>
+    <input type="file" name="receipt" accept="image/*" required>
+
+    <button type="submit">Submit Payment Info</button>
+  </form>
+</div>
+
+<!-- Confirmation Popup -->
+<div id="confirmationPopup" class="popup">
+  <h3>✅ Submitted Successfully!</h3>
+  <p>We'll verify and get back to you.</p>
+</div>
+
+<!-- Floating Help Button -->
+<div class="support-btn" onclick="window.open('https://wa.me/234XXXXXXXXXX', '_blank')">💬 Chat for Help</div>
+
+<script>
+  const methodSelect = document.getElementById("paymentMethod");
+  const sections = {
+    bank: document.getElementById("bankSection"),
+    metamask: document.getElementById("metamaskSection"),
+    card: document.getElementById("cardSection"),
+  };
+  methodSelect.addEventListener("change", function () {
+    Object.values(sections).forEach(el => el.style.display = "none");
+    if (sections[this.value]) sections[this.value].style.display = "block";
+  });
+
+  const form = document.getElementById('paymentForm');
+  const popup = document.getElementById('confirmationPopup');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(form);
+    fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    }).then(res => {
+      if (res.ok) {
+        popup.classList.add('show');
+        form.reset();
+        setTimeout(() => popup.classList.remove('show'), 4000);
+      } else {
+        alert('Failed. Try again.');
+      }
+    }).catch(() => alert('Network error'));
+  });
+</script>
+
+</body>
+</html>	   
